@@ -1,4 +1,4 @@
-//const apiEndpoint = "https://fa-todo-backend-baqmes.azurewebsites.net/api/tasks";
+//const apiEndpoint = "https://fa-todo-backend-baqmes.azurewebsites.net/api/tasks";///
 const apiEndpoint = "https://container-python.icyforest-b6a90c98.westus2.azurecontainerapps.io/api/tasks";
 
 $(document).ready(function () {

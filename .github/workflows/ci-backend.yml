@@ -1,15 +1,15 @@
-name: Build and push Docker image to Exoscale
+name: Build and save my Docker image to a registry
  
 on:
   push:
     branches:
       - main
     paths:
-      - 'src/backend/**'  # Déclenche uniquement si du code dans backend/ est modifié
+      - 'src/backend/**'  # déclenche seulement si backend change
  
 env:
-  REGISTRY: ${{ secrets.REGISTERY }}
-  IMAGE_NAME: backend-pye
+  REGISTRY: "acrinfobi22210.azurecr.io" # Nom de la registry Azure
+  IMAGE_NAME: "backend-pye"              # Nom de votre image Docker
  
 jobs:
   build-and-push:
@@ -19,12 +19,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
  
-      - name: Log in to Exoscale Registry
-        run: echo "${{ secrets.EXOSCALE_PASSWORD }}" | docker login -u "${{ secrets.EXOSCALE_USERNAME }}" --password-stdin ${{ env.REGISTRY }}
+      - name: Login Azure Container Registry
+        run: |
+          echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ env.REGISTRY }} -u ${{ secrets.REGISTRY_USER }} --password-stdin
  
       - name: Build Docker image
-        working-directory: ./src/backend
-        run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest .
+        run: |
+          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} -f src/backend/Dockerfile src/backend
  
       - name: Push Docker image
-        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}

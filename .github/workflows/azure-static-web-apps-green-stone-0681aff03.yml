@@ -41,6 +41,13 @@ jobs:
           output_location: "." # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
+      - name: Lighthouse CI Action
+  uses: treosh/lighthouse-ci-action@v12
+  with:
+    urls: "https://todoapp.emericpython.emf-informatique.ch/"
+    uploadArtifacts: true          # Sauvegarde les rapports Lighthouse dans GitHub Actions
+    temporaryPublicStorage: true   # Génère un lien temporaire pour partager les résultats
+
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
